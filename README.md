@@ -1,3 +1,5 @@
+> **Community modification / 社区改版:** This checkout adds a Claude Code prompt navigator to Warp OSS. For setup, use, source baseline, and limitations, see [English](docs/CLAUDE_PROMPT_NAVIGATOR.en.md) or [简体中文](docs/CLAUDE_PROMPT_NAVIGATOR.zh-CN.md). This is not an official Warp release.
+
 <a href="https://www.warp.dev">
     <img width="1024" alt="Warp Agentic Development Environment product preview" src="https://github.com/user-attachments/assets/9976b2da-2edd-4604-a36c-8fd53719c6d4" />
 </a>

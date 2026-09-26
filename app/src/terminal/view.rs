@@ -5,6 +5,7 @@ mod block_banner;
 pub mod block_onboarding;
 pub(crate) mod blocklist_filter;
 mod bookmarks;
+mod cli_prompt_navigator;
 mod context_menu;
 pub mod init;
 pub mod inline_banner;
@@ -183,6 +184,7 @@ use warpui::{
     end_trace_after_next, record_trace_event, windowing,
 };
 
+use self::cli_prompt_navigator::PromptNavigatorState;
 use self::link_detection::HighlightedLinkOption;
 pub use self::link_detection::{GridHighlightedLink, RichContentLink, RichContentLinkTooltipInfo};
 use super::available_shells::AvailableShell;
@@ -2592,6 +2594,7 @@ pub struct TerminalView {
     mouse_down_block_index: Option<BlockIndex>,
 
     mouse_states: TerminalViewMouseStates,
+    prompt_navigator: PromptNavigatorState,
 
     server_api: Arc<ServerApi>,
     auth_state: Arc<AuthState>,
@@ -4394,6 +4397,7 @@ impl TerminalView {
             any_session_contains_restored_remote_blocks: false,
             mouse_down_block_index: None,
             mouse_states: Default::default(),
+            prompt_navigator: Default::default(),
             open_grid_link_tool_tip: None,
             open_rich_content_link_tool_tip: None,
             server_api: resources.server_api.clone(),
@@ -14037,6 +14041,7 @@ impl TerminalView {
             CLIAgentSessionsModelEvent::Ended {
                 terminal_view_id, ..
             } if *terminal_view_id == self.view_id => {
+                self.prompt_navigator = PromptNavigatorState::default();
                 let mut model = self.model.lock();
                 let active_block = model.block_list_mut().active_block_mut();
                 if FeatureFlag::TrimTrailingBlankLines.is_enabled() {
@@ -14044,6 +14049,15 @@ impl TerminalView {
                 }
             }
             _ => {}
+        }
+        if matches!(
+            event,
+            CLIAgentSessionsModelEvent::Started { terminal_view_id, .. }
+                | CLIAgentSessionsModelEvent::StatusChanged { terminal_view_id, .. }
+                | CLIAgentSessionsModelEvent::SessionUpdated { terminal_view_id, .. }
+                if *terminal_view_id == self.view_id
+        ) {
+            self.sync_cli_prompt_navigator(ctx);
         }
         if event.terminal_view_id() == self.view_id
             && matches!(
@@ -27239,6 +27253,7 @@ impl TypedActionView for TerminalView {
             | Up
             | Down
             | JumpToBookmark(_)
+            | JumpToCLIAgentPrompt(_)
             | ScrollToTopOfBlock { topmost_block: _ } => {
                 if let Some(content) = self
                     .selected_blocks
@@ -27820,6 +27835,7 @@ impl TypedActionView for TerminalView {
                 self.notifications_discovery_banner_action(*action, ctx)
             }
             JumpToBookmark(index) => self.jump_to_bookmark(*index, ctx),
+            JumpToCLIAgentPrompt(index) => self.jump_to_cli_prompt(*index, ctx),
             InsertCommandCorrection { correction } => {
                 self.insert_command_correction(correction, ctx);
             }
@@ -28848,6 +28864,7 @@ impl View for TerminalView {
         if self.is_any_tooltip_open() {
             self.render_grid_tooltip(&mut stack, &model, appearance, app);
         }
+        self.render_cli_prompt_navigator(&mut stack, appearance);
 
         // Show progress steps while waiting for an ambient agent to start. CloudModeSetupV2 uses
         // the agent status bar for setup/follow-up progress.

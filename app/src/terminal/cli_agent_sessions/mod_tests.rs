@@ -625,6 +625,22 @@ fn prompt_submit_clears_permission_scoped_state() {
 }
 
 #[test]
+fn prompt_history_keeps_each_submitted_prompt_across_stop_events() {
+    let mut session = cli_agent_session(CLIAgentSessionStatus::InProgress, true);
+    for prompt in [" first prompt ", "second prompt"] {
+        let mut event = rich_event(CLIAgentEventType::PromptSubmit);
+        event.payload.query = Some(prompt.to_owned());
+        session.apply_event(&event);
+        session.apply_event(&rich_event(CLIAgentEventType::Stop));
+    }
+
+    assert_eq!(
+        session.session_context.prompt_history,
+        ["first prompt", "second prompt"]
+    );
+}
+
+#[test]
 fn tool_complete_clears_permission_scoped_state() {
     // GH-11082: answering an AskUserQuestion emits only ToolComplete (the
     // plugin sends no PermissionReplied for it), so the Blocked -> InProgress

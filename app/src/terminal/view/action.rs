@@ -255,6 +255,7 @@ pub enum TerminalAction {
     BookmarkBlock(BlockIndex),
     NotificationsErrorBanner(NotificationsErrorBannerAction),
     JumpToBookmark(BlockIndex),
+    JumpToCLIAgentPrompt(usize),
     OpenGridLink(GridHighlightedLink),
     OpenRichContentLink(RichContentLink),
     ToggleGridSecret {
@@ -591,6 +592,7 @@ impl fmt::Debug for TerminalAction {
             }
             NotificationsErrorBanner(action) => write!(f, "NotificationsErrorBanner({action:?})"),
             JumpToBookmark(index) => write!(f, "JumpToBookmark({index:?})"),
+            JumpToCLIAgentPrompt(index) => write!(f, "JumpToCLIAgentPrompt({index})"),
             InsertCommandCorrection { .. } => {
                 write!(f, "InsertCommandCorrection",)
             }

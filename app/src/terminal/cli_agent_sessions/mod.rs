@@ -63,6 +63,8 @@ pub struct CLIAgentSessionContext {
     pub tool_input_preview: Option<String>,
     pub summary: Option<String>,
     pub query: Option<String>,
+    pub prompt_history: Vec<String>,
+    pub transcript_path: Option<String>,
     pub response: Option<String>,
 }
 
@@ -209,6 +211,15 @@ impl CLIAgentSession {
         let new_status = match &event.event {
             CLIAgentEventType::PromptSubmit => {
                 self.session_context.query = event.payload.query.clone();
+                if let Some(query) = event
+                    .payload
+                    .query
+                    .as_deref()
+                    .map(str::trim)
+                    .filter(|query| !query.is_empty())
+                {
+                    self.session_context.prompt_history.push(query.to_owned());
+                }
                 self.session_context.response = None;
                 self.clear_permission_scoped_state();
                 CLIAgentSessionStatus::InProgress
@@ -223,12 +234,22 @@ impl CLIAgentSession {
             CLIAgentEventType::Stop => {
                 self.session_context.query = event.payload.query.clone();
                 self.session_context.response = event.payload.response.clone();
+                self.session_context.transcript_path = event
+                    .payload
+                    .transcript_path
+                    .clone()
+                    .or(self.session_context.transcript_path.take());
                 self.clear_permission_scoped_state();
                 CLIAgentSessionStatus::Success
             }
             CLIAgentEventType::StopFailure => {
                 self.session_context.query = event.payload.query.clone();
                 self.session_context.response = event.payload.response.clone();
+                self.session_context.transcript_path = event
+                    .payload
+                    .transcript_path
+                    .clone()
+                    .or(self.session_context.transcript_path.take());
                 self.clear_permission_scoped_state();
                 CLIAgentSessionStatus::Failed {
                     error_type: event.payload.error_type.clone(),
