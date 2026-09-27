@@ -2,6 +2,10 @@
 
 [简体中文](CLAUDE_PROMPT_NAVIGATOR.zh-CN.md) · [Home](../README.md)
 
+## Problem it solves
+
+In a long Claude Code conversation inside Warp, replies and tool output keep extending the terminal history. Finding a prompt you entered several turns ago means repeatedly scrolling to locate its original text. This project gathers the current session's human prompts in a right-side rail, so you can preview an earlier instruction on hover and try to jump to it with a click.
+
 ## Source baseline
 
 This project is based on commit [`df5cacf`](https://github.com/warpdotdev/warp/commit/df5cacf) (2026-09-24) of the [official open-source Warp repository](https://github.com/warpdotdev/warp). Use the commit hash to identify the exact baseline. The `0.1.0` in `app/Cargo.toml` is a Cargo package version, not a corresponding official Warp release version. This modification is not an official Warp release and does not alter the official Warp installation.
@@ -15,7 +19,7 @@ This project is based on commit [`df5cacf`](https://github.com/warpdotdev/warp/c
 
 ## Installation and use
 
-1. Install a Warp OSS build from this repository and the Claude Code CLI. The Windows test build was installed at `D:\WarpPromptNavigator\WarpOss`; do not overwrite an existing official Warp installation directly.
+1. Install a Warp OSS build from this repository and the Claude Code CLI. Keep this modified build separate from any existing official Warp installation.
 2. In Claude Code, install the official [Claude Code + Warp plugin](https://github.com/warpdotdev/claude-code-warp):
 
    ```text
@@ -26,7 +30,7 @@ This project is based on commit [`df5cacf`](https://github.com/warpdotdev/warp/c
    The plugin also requires `jq`. Restart Claude Code or run `/reload-plugins` after installation.
 3. Start `claude` in this modified Warp terminal and submit several prompts. Hover over the right-side ticks to preview prompts; click a tick to navigate.
 
-The navigator depends on session events such as `UserPromptSubmit` emitted by the plugin. The CLI alone does not give Warp a reliable record of each prompt. Local transcripts are read from Claude Code's `~/.claude/projects` or `CLAUDE_CONFIG_DIR/projects`. This feature does not upload them.
+The navigator depends on session events such as `UserPromptSubmit` emitted by the plugin. The CLI alone does not give Warp a reliable record of each prompt. Local transcripts are read from Claude Code on your computer. This feature does not upload them.
 
 ## Build from source
 

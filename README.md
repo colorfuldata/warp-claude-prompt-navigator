@@ -1,4 +1,26 @@
-> **Community modification / 社区改版:** This checkout adds a Claude Code prompt navigator to Warp OSS. For setup, use, source baseline, and limitations, see [English](docs/CLAUDE_PROMPT_NAVIGATOR.en.md) or [简体中文](docs/CLAUDE_PROMPT_NAVIGATOR.zh-CN.md). This is not an official Warp release.
+# Warp Claude Code 提问导航 / Prompt Navigator
+
+[简体中文](#简体中文) · [English](#english)
+
+## 简体中文
+
+在 Warp 终端里与 Claude Code 多轮对话后，回复和工具输出会把先前输入的提示词淹没。想回看某次提问，通常需要反复滚动终端历史，难以快速找到原文。
+
+这个社区改版在终端右侧加入提问导航：每次人工提问对应一条紧凑、垂直居中的刻度；悬停可预览提示词并看到相邻刻度的波浪动效；点击可尝试跳回对应位置。即使终端历史已截断，也可以查看从本机会话记录恢复的提问内容。
+
+需要在此改版 Warp 中运行 Claude Code，并安装 [Claude Code + Warp 插件](https://github.com/warpdotdev/claude-code-warp)。安装步骤、源码基线、验证情况与限制见[中文使用文档](docs/CLAUDE_PROMPT_NAVIGATOR.zh-CN.md)。本项目不是 Warp 官方发行版。
+
+## English
+
+After a long Claude Code conversation in Warp, replies and tool output bury earlier prompts. Finding a previous instruction means scrolling through terminal history and trying to locate the original text.
+
+This community modification adds a prompt navigator on the right side of the terminal. Each human prompt gets a compact, vertically centered tick. Hover to preview its text and see the nearby ticks respond in a wave; click to try to jump back to the prompt. If terminal history has been truncated, the prompt can still be viewed from the local Claude Code transcript.
+
+Run Claude Code in this modified Warp build and install the [Claude Code + Warp plugin](https://github.com/warpdotdev/claude-code-warp). See the [English guide](docs/CLAUDE_PROMPT_NAVIGATOR.en.md) for setup, source baseline, verification, and limitations. This is not an official Warp release.
+
+---
+
+## Warp 上游项目说明 / Upstream Warp README
 
 <a href="https://www.warp.dev">
     <img width="1024" alt="Warp Agentic Development Environment product preview" src="https://github.com/user-attachments/assets/9976b2da-2edd-4604-a36c-8fd53719c6d4" />

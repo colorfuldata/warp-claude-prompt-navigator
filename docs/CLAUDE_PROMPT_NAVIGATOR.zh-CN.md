@@ -2,6 +2,10 @@
 
 [English](CLAUDE_PROMPT_NAVIGATOR.en.md) · [返回首页](../README.md)
 
+## 解决的痛点
+
+在 Warp 中与 Claude Code 进行多轮对话时，回复和工具输出会不断拉长终端历史。想回看几轮前自己输入的提示词，往往只能反复滚动查找，难以快速定位原文。本项目把当前会话的人工提问集中显示在右侧导航条上，让你通过悬停预览、点击跳转来找回先前的要求。
+
 ## 源码基线
 
 本项目基于 [Warp 官方开源仓库](https://github.com/warpdotdev/warp) 的提交 [`df5cacf`](https://github.com/warpdotdev/warp/commit/df5cacf)（2026-09-24）。请使用提交号识别基线；`app/Cargo.toml` 中的 `0.1.0` 是 Cargo 包版本，并非对应的 Warp 正式发布版本。本改版不是 Warp 官方发行版，也没有修改官方 Warp 安装程序。
@@ -15,7 +19,7 @@
 
 ## 安装与使用
 
-1. 安装此仓库构建的 Warp OSS 版本和 Claude Code CLI。Windows 测试环境将此改版安装在 `D:\WarpPromptNavigator\WarpOss`；请不要直接覆盖已有的官方 Warp 安装。
+1. 安装此仓库构建的 Warp OSS 版本和 Claude Code CLI。请将此改版与已有的官方 Warp 安装分开。
 2. 在 Claude Code 中安装 Warp 官方的 [Claude Code + Warp 插件](https://github.com/warpdotdev/claude-code-warp)：
 
    ```text
@@ -26,7 +30,7 @@
    插件还需要 `jq`。安装后重启 Claude Code，或运行 `/reload-plugins`。
 3. 在此改版 Warp 的终端中启动 `claude`，连续发送几次提问。右侧会出现刻度；移入查看内容，点击定位。
 
-导航依赖插件发出的 `UserPromptSubmit` 等会话事件。只安装 Claude Code CLI、不安装插件时，Warp 无法可靠获得每次提问。会话记录来自本机 Claude Code 的 `~/.claude/projects`，或 `CLAUDE_CONFIG_DIR/projects`；本功能不会上传该记录。
+导航依赖插件发出的 `UserPromptSubmit` 等会话事件。只安装 Claude Code CLI、不安装插件时，Warp 无法可靠获得每次提问。会话记录来自本机 Claude Code；本功能不会上传该记录。
 
 ## 从源码构建
 
